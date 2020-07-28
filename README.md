@@ -15,7 +15,7 @@ A link shortening service
 `DB_HOST=<database URL>`  
 `DB_PORT=<port>`  
 `DB_USER=<user name>`  
-`DB_PASSWORD=<password>`  
+`DB_PASS=<password>`  
 
 ## Docker
 ```
