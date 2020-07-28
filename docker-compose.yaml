@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  database:
+    container_name: db
+    image: postgres
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=postgres
+    volumes:
+      - database:/var/lib/postgresql/data/
+    restart: always
+  api:
+    container_name: short-link
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=user
+      - DB_PASS=pass
+    restart: always
+volumes:
+  database:
