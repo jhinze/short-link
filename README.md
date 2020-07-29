@@ -15,7 +15,7 @@ A link shortening service
 `DB_HOST=<database URL>`  
 `DB_PORT=<port>`  
 `DB_USER=<user name>`  
-`DB_PASSWORD=<password>`  
+`DB_PASS=<password>`  
 
 ## Docker
 ```
@@ -25,7 +25,7 @@ docker run \
   -e DB_HOST=<database URL> \ 
   -e DB_PORT=<port> \
   -e DB_USER=<user name> \
-  -e DB_PASSWORD=<password> \
+  -e DB_PASS=<password> \
   jhinze/short-link
 ```
   
