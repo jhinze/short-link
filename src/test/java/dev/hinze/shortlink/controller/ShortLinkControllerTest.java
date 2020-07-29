@@ -41,9 +41,9 @@ public class ShortLinkControllerTest {
     private MockMvc mockMvc;
 
     private final ShortLink shortLink =
-            new ShortLink("123456", "https://some.url", OffsetDateTime.now(), null);
+            new ShortLink("123456", "https://1.b/123456", "https://some.url", OffsetDateTime.now(), null);
     private final ShortLink expiredShortLink =
-            new ShortLink("abcdef", "https://some.url", OffsetDateTime.now(), OffsetDateTime.now().minusHours(1));
+            new ShortLink("abcdef", "https://1.b/abcdef", "https://some.url", OffsetDateTime.now(), OffsetDateTime.now().minusHours(1));
 
     @BeforeEach
     public void before() {
@@ -67,6 +67,8 @@ public class ShortLinkControllerTest {
                 .isEqualTo(OffsetDateTime.parse(exp));
         assertThat(shortLink.getId())
                 .isNotBlank();
+        assertThat(shortLink.getShortLink())
+                .isEqualTo("http://localhost/" + shortLink.getId());
     }
 
     @Test

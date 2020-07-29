@@ -17,6 +17,7 @@ public class ShortLink {
 
     @Id
     private String id;
+    private String shortLink;
     private String toUrl;
     private OffsetDateTime createdOn;
     private OffsetDateTime expiresOn;

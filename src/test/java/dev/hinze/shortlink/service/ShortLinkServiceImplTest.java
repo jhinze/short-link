@@ -26,7 +26,7 @@ public class ShortLinkServiceImplTest {
     private ShortLinkService shortLinkServiceImpl;
 
     private final ShortLink shortLink =
-            new ShortLink("123456", "https://some.url", OffsetDateTime.now(), null);
+            new ShortLink("123456", "https://a.b/123456", "https://some.url", OffsetDateTime.now(), null);
 
     @Test
     public void shouldGetShortLink() {

@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.LockModeType;
 import java.time.OffsetDateTime;
@@ -30,7 +31,16 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Override
     public ShortLink create(String to, OffsetDateTime expiration) {
-        var shortLink = new ShortLink(getUniqueRandomSixDigitBase62(), to, OffsetDateTime.now(), expiration);
+        var id = getUniqueRandomSixDigitBase62();
+        var shortLink = new ShortLink(
+                id,
+                ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .replacePath(id)
+                        .build()
+                        .toUriString(),
+                to,
+                OffsetDateTime.now(),
+                expiration);
         log.info("Creating short link {}", shortLink.getId());
         return shortLinkRepository.save(shortLink);
     }
