@@ -7,3 +7,9 @@ spring.datasource:
   password: ${DB_PASS}
 spring.cache.cache-names: shortLink
 spring.cache.caffeine.spec: maximumSize=500,expireAfterAccess=3600s
+
+google.recaptcha.v3:
+  secret: ${RECAPTCHA_V3_SECRET}
+  verify: true
+  min: 0.7
+  action: create

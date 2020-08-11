@@ -3,6 +3,8 @@ services:
   database:
     container_name: db
     image: postgres
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=pass
@@ -22,6 +24,7 @@ services:
       - DB_PORT=5432
       - DB_USER=user
       - DB_PASS=pass
+      - RECAPTCHA_V3_SECRET=xxxxx
     restart: always
 volumes:
   database:
