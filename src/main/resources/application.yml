@@ -1,12 +1,17 @@
-spring.jpa:
-  properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
-  hibernate.ddl-auto: update
-spring.datasource:
-  url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/postgres
-  username: ${DB_USER}
-  password: ${DB_PASS}
-spring.cache.cache-names: shortLink
-spring.cache.caffeine.spec: maximumSize=500,expireAfterAccess=3600s
+spring:
+  jpa:
+    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/postgres
+    username: ${DB_USER}
+    password: ${DB_PASS}
+  cache:
+    cache-names: shortLink
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=3600s
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 
 google.recaptcha.v3:
   secret: ${RECAPTCHA_V3_SECRET}
