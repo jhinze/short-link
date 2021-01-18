@@ -22,4 +22,4 @@ google.recaptcha.v3:
 server:
   tomcat:
     threads:
-      max: ${HTTP_MAX_THREADS:10}
+      max: ${HTTP_MAX_THREADS}
