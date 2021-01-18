@@ -18,3 +18,8 @@ google.recaptcha.v3:
   verify: true
   min: 0.7
   action: create
+  
+server:
+  tomcat:
+    threads:
+      max: ${HTTP_MAX_THREADS:10}
