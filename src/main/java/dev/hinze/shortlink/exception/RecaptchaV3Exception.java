@@ -1,13 +1,12 @@
 package dev.hinze.shortlink.exception;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-@ResponseStatus(HttpStatus.FORBIDDEN)
-public class RecaptchaV3Exception extends RuntimeException {
+public class RecaptchaV3Exception extends ResponseStatusException {
 
     public RecaptchaV3Exception(String message) {
-        super(message);
+        super(HttpStatus.FORBIDDEN, message);
     }
 
 }

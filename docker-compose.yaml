@@ -2,7 +2,7 @@ version: '3.7'
 services:
   database:
     container_name: db
-    image: postgres
+    image: postgres:12.9
     ports:
       - 5432:5432
     environment:
@@ -14,7 +14,7 @@ services:
     restart: always
   api:
     container_name: short-link
-    build: .
+    image: docker.io/library/short-link:0.2.0-SNAPSHOT
     ports:
       - 8080:8080
     depends_on:

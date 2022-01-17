@@ -1,0 +1,50 @@
+name: Build and Push
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Get Maven artifact
+        id: get_artifact
+        working-directory: "./"
+        run: |
+          NAME=$( mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout )
+          VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )
+          echo "::set-output name=name::$NAME"
+          echo "::set-output name=version::$VERSION"
+
+      - name: Build Native Image
+        run: mvn clean spring-boot:build-image
+
+      - name: Push Image Docker Hub
+        uses: akhilerm/tag-push-action@v2.0.0
+        with:
+          src: docker.io/library/${{ steps.get_artifact.outputs.name }}:${{ steps.get_artifact.outputs.version }}
+          dst: |
+            jhinze/${{ steps.get_artifact.outputs.name }}:latest
+            jhinze/${{ steps.get_artifact.outputs.name }}:${{ steps.get_artifact.outputs.version }}

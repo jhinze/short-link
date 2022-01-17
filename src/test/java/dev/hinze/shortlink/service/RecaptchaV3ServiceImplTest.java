@@ -2,7 +2,6 @@ package dev.hinze.shortlink.service;
 
 import dev.hinze.shortlink.exception.RecaptchaV3Exception;
 import dev.hinze.shortlink.model.RecaptchaV3Response;
-import dev.hinze.shortlink.service.impl.RecaptchaV3ServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(
-        classes = RecaptchaV3ServiceImpl.class,
+        classes = RecaptchaV3Service.class,
         properties = {
         "google.recaptcha.v3.secret=xxxx",
         "google.recaptcha.v3.verify=true",
