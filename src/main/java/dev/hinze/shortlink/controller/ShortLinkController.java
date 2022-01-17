@@ -4,6 +4,7 @@ import dev.hinze.shortlink.exception.ShortLinkExpiredException;
 import dev.hinze.shortlink.model.ShortLink;
 import dev.hinze.shortlink.service.RecaptchaV3Service;
 import dev.hinze.shortlink.service.ShortLinkService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ public class ShortLinkController {
     private final ShortLinkService shortLinkService;
     private final RecaptchaV3Service recaptchaV3Service;
 
+    @Autowired
     public ShortLinkController(ShortLinkService shortLinkService, RecaptchaV3Service recaptchaV3Service) {
         this.shortLinkService = shortLinkService;
         this.recaptchaV3Service = recaptchaV3Service;

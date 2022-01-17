@@ -3,8 +3,8 @@ package dev.hinze.shortlink.controller;
 import dev.hinze.shortlink.model.RecaptchaV3Response;
 import dev.hinze.shortlink.model.ShortLink;
 import dev.hinze.shortlink.repository.ShortLinkRepository;
-import dev.hinze.shortlink.service.impl.RecaptchaV3ServiceImpl;
-import dev.hinze.shortlink.service.impl.ShortLinkServiceImpl;
+import dev.hinze.shortlink.service.RecaptchaV3Service;
+import dev.hinze.shortlink.service.ShortLinkService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -40,8 +40,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(
         classes = {
                 ShortLinkController.class,
-                ShortLinkServiceImpl.class,
-                RecaptchaV3ServiceImpl.class
+                ShortLinkService.class,
+                RecaptchaV3Service.class
         })
 public class ShortLinkControllerTest {
 

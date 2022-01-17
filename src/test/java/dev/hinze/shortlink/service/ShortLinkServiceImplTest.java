@@ -3,7 +3,6 @@ package dev.hinze.shortlink.service;
 import dev.hinze.shortlink.exception.ShortLinkCreateException;
 import dev.hinze.shortlink.model.ShortLink;
 import dev.hinze.shortlink.repository.ShortLinkRepository;
-import dev.hinze.shortlink.service.impl.ShortLinkServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = ShortLinkServiceImpl.class)
+@SpringBootTest(classes = ShortLinkService.class)
 public class ShortLinkServiceImplTest {
 
     @MockBean
