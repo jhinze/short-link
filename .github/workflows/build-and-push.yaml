@@ -41,10 +41,13 @@ jobs:
       - name: Build Native Image
         run: mvn clean spring-boot:build-image
 
-      - name: Push Image Docker Hub
-        uses: akhilerm/tag-push-action@v2.0.0
-        with:
-          src: ${{ steps.get_artifact.outputs.name }}:${{ steps.get_artifact.outputs.version }}
-          dst: |
-            jhinze/${{ steps.get_artifact.outputs.name }}:latest
-            jhinze/${{ steps.get_artifact.outputs.name }}:${{ steps.get_artifact.outputs.version }}
+      - name: Push Image
+        env:
+          IMAGE_NAME: ${{ steps.get_artifact.outputs.name }}
+          VERSION: ${{ steps.get_artifact.outputs.version }}
+        run: |
+          docker image ls
+          docker tag $IMAGE_NAME:$VERSION jhinze/$IMAGE_NAME:$VERSION
+          docker push jhinze/$IMAGE_NAME:$VERSION
+          docker tag jhinze/$IMAGE_NAME:$VERSION jhinze/$IMAGE_NAME:latest
+          docker push jhinze/$IMAGE_NAME:latest
