@@ -28,7 +28,8 @@ public class ShortLinkService {
             try {
                 var shortLink = new ShortLink()
                         .setToUrl(to)
-                        .setExpiresOn(expiration);
+                        .setExpiresOn(expiration)
+                        .setCreatedOn(OffsetDateTime.now());
                 shortLink = shortLinkRepository.save(shortLink);
                 log.info("Created short link {}", shortLink.getId());
                 return shortLink;
