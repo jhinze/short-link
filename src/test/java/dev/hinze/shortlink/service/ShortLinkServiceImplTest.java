@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -26,7 +27,10 @@ public class ShortLinkServiceImplTest {
     private ShortLinkService shortLinkServiceImpl;
 
     private final ShortLink shortLink =
-            new ShortLink("123456", "https://a.b/123456", "https://some.url", OffsetDateTime.now(), null);
+            new ShortLink()
+                    .setId("123456")
+                    .setToUrl("https://some.url")
+                    .setCreatedOn(OffsetDateTime.now());
 
     @Test
     public void shouldGetShortLink() {
@@ -45,7 +49,7 @@ public class ShortLinkServiceImplTest {
 
     @Test
     public void shouldCreateShortLink() {
-        when(shortLinkRepository.existsById(anyString())).thenReturn(false);
+        when(shortLinkRepository.save(any(ShortLink.class))).thenReturn(shortLink);
         shortLinkServiceImpl.create("http://some.place", null);
         verify(shortLinkRepository, times(1))
                 .save(any(ShortLink.class));
@@ -53,7 +57,7 @@ public class ShortLinkServiceImplTest {
 
     @Test
     public void shouldThrowExceptionIfUnableToCreateUniqueId() {
-        when(shortLinkRepository.existsById(anyString())).thenReturn(true);
+        when(shortLinkRepository.save(any(ShortLink.class))).thenThrow(DataIntegrityViolationException.class);
         Assertions.assertThrows(ShortLinkCreateException.class, () ->
                 shortLinkServiceImpl.create("http://some.place", null));
     }

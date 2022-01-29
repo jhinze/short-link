@@ -55,9 +55,14 @@ public class ShortLinkControllerTest {
     private MockMvc mockMvc;
 
     private final ShortLink shortLink =
-            new ShortLink("123456", "https://1.b/123456", "https://some.url", OffsetDateTime.now(), null);
+            new ShortLink().setId("123456")
+                    .setToUrl("https://some.url")
+                    .setCreatedOn(OffsetDateTime.now());
     private final ShortLink expiredShortLink =
-            new ShortLink("abcdef", "https://1.b/abcdef", "https://some.url", OffsetDateTime.now(), OffsetDateTime.now().minusHours(1));
+            new ShortLink().setId("abcdef")
+                    .setToUrl("https://some.url")
+                    .setCreatedOn(OffsetDateTime.now())
+                    .setExpiresOn(OffsetDateTime.now().minusHours(1));
     private final RecaptchaV3Response recaptchaV3Response =
             new RecaptchaV3Response(true, BigDecimal.valueOf(0.7), "action", OffsetDateTime.now(), "localhost", new String[]{});
     private final RecaptchaV3Response lowScoreRecaptchaV3Response =
@@ -67,6 +72,7 @@ public class ShortLinkControllerTest {
     public void before() {
         when(shortLinkRepository.findById(eq("123456"))).thenReturn(Optional.of(shortLink));
         when(shortLinkRepository.findById(eq("abcdef"))).thenReturn(Optional.of(expiredShortLink));
+        when(shortLinkRepository.save(any(ShortLink.class))).thenReturn(shortLink);
         when(restTemplate.postForObject(contains("good"), any(), eq(RecaptchaV3Response.class)))
                 .thenReturn(recaptchaV3Response);
         when(restTemplate.postForObject(contains("bad"), any(), eq(RecaptchaV3Response.class)))
@@ -96,9 +102,7 @@ public class ShortLinkControllerTest {
                 .usingDefaultComparator()
                 .isEqualTo(OffsetDateTime.parse(exp));
         assertThat(shortLink.getId())
-                .isNotBlank();
-        assertThat(shortLink.getShortLink())
-                .isEqualTo("http://localhost/" + shortLink.getId());
+                .isNull();
     }
 
     @Test
@@ -114,7 +118,7 @@ public class ShortLinkControllerTest {
         assertThat(shortLink.getExpiresOn())
                 .isNull();
         assertThat(shortLink.getId())
-                .isNotBlank();
+                .isNull();
     }
 
     @Test

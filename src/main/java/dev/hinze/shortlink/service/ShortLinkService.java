@@ -5,42 +5,38 @@ import dev.hinze.shortlink.exception.ShortLinkNotFoundException;
 import dev.hinze.shortlink.model.ShortLink;
 import dev.hinze.shortlink.repository.ShortLinkRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.jpa.repository.Lock;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.persistence.LockModeType;
 import java.time.OffsetDateTime;
 
 @Service
 @Slf4j
 public class ShortLinkService {
 
-    private static final char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
-
+    private static final int SAVE_ATTEMPTS = 10;
     private final ShortLinkRepository shortLinkRepository;
 
     public ShortLinkService(ShortLinkRepository shortLinkRepository) {
         this.shortLinkRepository = shortLinkRepository;
     }
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public ShortLink create(String to, OffsetDateTime expiration) {
-        var id = getUniqueRandomSixDigitBase62();
-        var shortLink = new ShortLink(
-                id,
-                ServletUriComponentsBuilder.fromCurrentContextPath()
-                        .replacePath(id)
-                        .build()
-                        .toUriString(),
-                to,
-                OffsetDateTime.now(),
-                expiration);
-        log.info("Creating short link {}", shortLink.getId());
-        return shortLinkRepository.save(shortLink);
+        for(int i = 0; i < SAVE_ATTEMPTS; i++) {
+            try {
+                var shortLink = new ShortLink()
+                        .setToUrl(to)
+                        .setExpiresOn(expiration);
+                shortLink = shortLinkRepository.save(shortLink);
+                log.info("Created short link {}", shortLink.getId());
+                return shortLink;
+            } catch (DataIntegrityViolationException e) {
+                log.warn("Unable to save short link", e);
+            }
+        }
+        throw new ShortLinkCreateException("Error creating short link");
     }
 
     @Cacheable(value = "shortLink", key = "#shortLinkId")
@@ -54,16 +50,6 @@ public class ShortLinkService {
     public void delete(ShortLink shortLink) {
         log.info("Deleting short link {}", shortLink.getId());
         shortLinkRepository.delete(shortLink);
-    }
-
-    private String getUniqueRandomSixDigitBase62() {
-        int attempts = 10;
-        while(attempts-- > 0) {
-            var string = RandomStringUtils.random(6, chars);
-            if(!shortLinkRepository.existsById(string))
-                return string;
-        }
-        throw new ShortLinkCreateException("error generating unique string");
     }
 
 }
