@@ -14,7 +14,7 @@ services:
     restart: always
   api:
     container_name: short-link
-    image: docker.io/library/short-link:0.2.0-SNAPSHOT
+    image: docker.io/library/short-link:0.3.0-SNAPSHOT
     ports:
       - 8080:8080
     depends_on:
@@ -25,6 +25,7 @@ services:
       - DB_USER=user
       - DB_PASS=pass
       - RECAPTCHA_V3_SECRET=xxxxx
+      - RECAPTCHA_VERIFY=false
     restart: always
 volumes:
   database:

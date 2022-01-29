@@ -26,6 +26,7 @@ public class ShortLink {
     @Transient
     private String shortLink;
     private String toUrl;
+    @CreationTimestamp
     private OffsetDateTime createdOn;
     private OffsetDateTime expiresOn;
 

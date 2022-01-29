@@ -15,7 +15,7 @@ spring:
 
 google.recaptcha.v3:
   secret: ${RECAPTCHA_V3_SECRET}
-  verify: true
+  verify: ${RECAPTCHA_VERIFY:true}
   min: 0.7
   action: create
   
